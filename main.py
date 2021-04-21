@@ -3,7 +3,7 @@ import script
 
 def main():
    book_info = script.scraping_book()
-   script.save_book_info_to_csv(csvfile, book_info)
+   script.save_book_info_to_csv(book_info)
 
 
 if __name__ == "__main__":

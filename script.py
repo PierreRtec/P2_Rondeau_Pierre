@@ -62,7 +62,7 @@ def product_image_url(soup):
 
 def product_number_available(soup):
   number = soup.find_all("td")[5].text
-  table = soup.find('table")
+  table = soup.find("table")
   table_rows = table.find_all("tr")
   print(number)
   return number
