@@ -2,10 +2,11 @@ import requests
 import csv
 from bs4 import BeautifulSoup
 
-def save_book_info_to_csv(book_info: dict):
-  with open('book_info_to.csv','w', encoding='utf-8') as csvfile:
-    writer = csv.DictWriter(csvfile, book_info, dialect='excel')
-    writer.writeheader()
+def save_book_info_to_csv(csvfile, book_info: dict):
+    with open("book_info_to.csv", "w", encoding="utf-8") as csvfile:
+      writer = csv.DictWriter(csvfile, book_info, dialect="excel")
+      writer.writeheader()
+      writer.writerow(book_info)
 
 
 
@@ -14,7 +15,7 @@ def scraping_book():
     response = requests.get(url)
     if response.ok:
         soup = BeautifulSoup(response.content, "html.parser")
-        title = soup.select_one('.product_main h1').text
+        title = soup.select_one(".product_main h1").text
         print(title)
         description = product_description(soup)
         category = product_category(soup)
@@ -25,25 +26,25 @@ def scraping_book():
         excluding = product_price_excluding(soup)
         review_rating = product_review_rating(soup)
         return {
-          'title': title,
-          'description': description, 
-          'category' : category, 
-          'upc' : upc, 
-          'image_url' : image_url, 
-          'number' : number,
-          'including' : including,
-          'excluding' : excluding,
-          'review_rating' : review_rating,
+          "title": title,
+          "description": description,
+          "category": category,
+          "upc": upc,
+          "image_url": image_url,
+          "number": number,
+          "including": including,
+          "excluding": excluding,
+          "review_rating": review_rating,
           }
 
      
 def product_description(soup):
-  description = soup.select_one('.sub-header ~ p').text
+  description = soup.select_one(".sub-header ~ p").text
   print(description)
   return description
 
 def product_category(soup):
-  category = soup.select('.breadcrumb li')[-2].text
+  category = soup.select(".breadcrumb li")[-2].text
   print(category)
   return category
 
@@ -60,27 +61,27 @@ def product_image_url(soup):
   return image_url
 
 def product_number_available(soup):
-  number = soup.find_all('td')[5].text
-  table = soup.find('table')
-  table_rows = table.find_all('tr')
+  number = soup.find_all("td")[5].text
+  table = soup.find('table")
+  table_rows = table.find_all("tr")
   print(number)
   return number
 
 def product_price_including(soup):
-  including = soup.find_all('td')[3].text
-  table = soup.find('table')
-  table_rows = table.find_all('tr')
+  including = soup.find_all("td")[3].text
+  table = soup.find("table")
+  table_rows = table.find_all("tr")
   print(including)
   return including
   
 def product_price_excluding(soup):
-  excluding = soup.find_all('td')[2].text
-  table = soup.find('table')
-  table_rows = table.find_all('tr')
+  excluding = soup.find_all("td")[2].text
+  table = soup.find("table")
+  table_rows = table.find_all("tr")
   print(excluding)
   return excluding
 
 def product_review_rating(soup):
-  review_rating = soup.find('p', 'star-rating')['class'][1]
+  review_rating = soup.find("p", "star-rating")["class"][1]
   print(review_rating)
   return review_rating
