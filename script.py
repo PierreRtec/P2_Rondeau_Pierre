@@ -2,6 +2,7 @@ import requests
 import csv
 import urllib3
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
 
 
 def save_book_info_to_csv(book_info: dict):
@@ -11,6 +12,10 @@ def save_book_info_to_csv(book_info: dict):
       writer.writeheader()
       writer.writerow(book_info)
 
+def get_url_category(soup):
+  back_to_base_url = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+  books_category_url = "http://books.toscrape.com/catalogue/category/books_1/index.html"
+  print(get_url_category)
 
 
 def scraping_book():
@@ -28,6 +33,7 @@ def scraping_book():
         including = product_price_including(soup)
         excluding = product_price_excluding(soup)
         review_rating = product_review_rating(soup)
+        url_category = get_url_category(soup)
         return {
           "title": title,
           "description": description,
