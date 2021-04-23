@@ -6,11 +6,6 @@ from urllib.parse import urljoin
 
 
 
-
-
-
-
-
 def save_book_info_to_csv(book_info: dict):
     with open("book_info_to.csv", "w", encoding="utf-8-sig"
     ) as csvfile:
@@ -22,6 +17,10 @@ def save_book_info_to_csv(book_info: dict):
 def scraping_book():
     url_book = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
     response = requests.get(url_book)
+    category_base_url = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+    category_urls = "../../category/books_1/index.html"
+    return urljoin(category_base_url, category_urls)
+    print(category_urls)
     if response.ok:
         soup = BeautifulSoup(response.content, "html.parser")
         title = soup.select_one(".product_main h1").text
@@ -34,6 +33,7 @@ def scraping_book():
         including = product_price_including(soup)
         excluding = product_price_excluding(soup)
         review_rating = product_review_rating(soup)
+        url_category = get_url_category(soup)
         return {
           "title": title,
           "description": description,
@@ -45,7 +45,6 @@ def scraping_book():
           "excluding": excluding,
           "review_rating": review_rating,
           }
-
      
 def product_description(soup):
   description = soup.select_one(".sub-header ~ p").text
@@ -94,3 +93,9 @@ def product_review_rating(soup):
   review_rating = soup.find("p", "star-rating")["class"][1]
   print(review_rating)
   return review_rating
+
+def get_url_category(soup):
+  url_category = soup.find("ul")
+  nav_list = soup.find_all("li", "href")
+  print(url_category)
+  return url_category
