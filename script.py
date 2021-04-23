@@ -17,8 +17,8 @@ def get_all_categories(url):
     links = menu.find_all('a')
     for link in links:
         link_urls.append(urljoin(url, link["href"]))
-        print(link_urls)
-  return link_urls[1:]
+    print(link_urls)
+  return link_urls[2:]
 
 
 
