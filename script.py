@@ -5,25 +5,38 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
 
-def scraping_category():
+def scraping_category(url):
   pass
+
 
 def get_all_categories(url):
   link_urls = []
   response = requests.get(url)
-  soup = BeautifulSoup(response.content, "html.parser")
   if response.ok:
+    soup = BeautifulSoup(response.content, "html.parser")
     menu = soup.find(class_="side_categories")
-    links = menu.find_all('a')
+    links = menu.find_all("a")
     for link in links:
         link_urls.append(urljoin(url, link["href"]))
     print(link_urls)
-  return link_urls[2:]
+  return link_urls[1:]
 
 
 
-def get_all_urls_book_from_one_category():
-  pass
+def get_all_urls_book_from_one_category(url_travel):
+  link_urls = []
+  response = requests.get(url_travel)
+  if response.ok:
+    soup = BeautifulSoup(response.content, "html.parser")
+    all_urls_book = soup.select("h3 a")
+    links = soup.find_all("a")
+    for link in links:
+        link_urls.append(urljoin(url_travel, link["href"]))
+    print(link_urls)
+  return link_urls[1:]
+
+
+
 
 def get_all_url_book_in_categories():
   pass
