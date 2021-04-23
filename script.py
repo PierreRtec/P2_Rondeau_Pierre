@@ -5,6 +5,36 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
 
+def scraping_category():
+  pass
+
+def get_all_categories(url):
+  link_urls = []
+  response = requests.get(url)
+  soup = BeautifulSoup(response.content, "html.parser")
+  if response.ok:
+    menu = soup.find(class_="side_categories")
+    links = menu.find_all('a')
+    for link in links:
+        link_urls.append(urljoin(url, link["href"]))
+        print(link_urls)
+  return link_urls[1:]
+
+
+
+def get_all_urls_book_from_one_category():
+  pass
+
+def get_all_url_book_in_categories():
+  pass
+
+
+
+
+
+
+
+
 
 def save_book_info_to_csv(book_info: dict):
     with open("book_info_to.csv", "w", encoding="utf-8-sig"
@@ -13,14 +43,9 @@ def save_book_info_to_csv(book_info: dict):
       writer.writeheader()
       writer.writerow(book_info)
 
-
 def scraping_book():
     url_book = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
-    response = requests.get(url_book)
-    category_base_url = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
-    category_urls = "../../category/books_1/index.html"
-    return urljoin(category_base_url, category_urls)
-    print(category_urls)
+    response = requests.get(url_book)  
     if response.ok:
         soup = BeautifulSoup(response.content, "html.parser")
         title = soup.select_one(".product_main h1").text
@@ -33,7 +58,6 @@ def scraping_book():
         including = product_price_including(soup)
         excluding = product_price_excluding(soup)
         review_rating = product_review_rating(soup)
-        url_category = get_url_category(soup)
         return {
           "title": title,
           "description": description,
@@ -44,7 +68,7 @@ def scraping_book():
           "including": including,
           "excluding": excluding,
           "review_rating": review_rating,
-          }
+          }   
      
 def product_description(soup):
   description = soup.select_one(".sub-header ~ p").text
@@ -93,9 +117,3 @@ def product_review_rating(soup):
   review_rating = soup.find("p", "star-rating")["class"][1]
   print(review_rating)
   return review_rating
-
-def get_url_category(soup):
-  url_category = soup.find("ul")
-  nav_list = soup.find_all("li", "href")
-  print(url_category)
-  return url_category
