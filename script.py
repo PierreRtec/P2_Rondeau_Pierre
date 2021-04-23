@@ -1,9 +1,12 @@
 import requests
 import csv
+import urllib3
 from bs4 import BeautifulSoup
 
-def save_book_info_to_csv(csvfile, book_info: dict):
-    with open("book_info_to.csv", "w", encoding="utf-8") as csvfile:
+
+def save_book_info_to_csv(book_info: dict):
+    with open("book_info_to.csv", "w", encoding="utf-8-sig"
+    ) as csvfile:
       writer = csv.DictWriter(csvfile, book_info, dialect="excel")
       writer.writeheader()
       writer.writerow(book_info)
@@ -11,8 +14,8 @@ def save_book_info_to_csv(csvfile, book_info: dict):
 
 
 def scraping_book():
-    url = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
-    response = requests.get(url)
+    url_book = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+    response = requests.get(url_book)
     if response.ok:
         soup = BeautifulSoup(response.content, "html.parser")
         title = soup.select_one(".product_main h1").text
