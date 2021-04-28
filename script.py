@@ -14,7 +14,7 @@ def scraping_category(url_category):
     links = category_to_scrap.select("a")
     for link in links:
       link_urls.append(urljoin(url_category, link["href"]))
-    print(link_urls[1])
+    print(link_urls[33])
   return link_urls
     
 
@@ -49,7 +49,13 @@ def get_all_urls_book_from_one_category(url_travel):
 
 
 def get_all_url_book_in_categories():
-  pass
+  link_urls = []
+  response = requests.get(url_all_book_category)
+  if response.ok:
+    soup = BeautifulSoup(response.content, "html.parser")
+    all_books_category
+
+
 
 
 
