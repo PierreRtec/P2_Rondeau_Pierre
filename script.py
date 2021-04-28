@@ -48,7 +48,7 @@ def get_all_urls_book_from_one_category(url_travel):
 
 
 
-def get_all_url_book_in_categories():
+def get_all_url_book_in_categories(url_all_book_category):
   link_urls = []
   response = requests.get(url_all_book_category)
   if response.ok:
