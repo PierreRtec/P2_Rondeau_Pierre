@@ -53,7 +53,13 @@ def get_all_url_book_in_categories(url_all_book_category):
   response = requests.get(url_all_book_category)
   if response.ok:
     soup = BeautifulSoup(response.content, "html.parser")
-    all_books_category
+    all_urls_book = soup.select("h3 a")
+    links = soup.find_all("a")
+    for link in links:
+        link_urls.append(urljoin(url_all_book_category, link["href"]))
+        # pagination soit for(itérative) - soit récursive
+    print(link_urls)
+  return link_urls[1:]
 
 
 
