@@ -3,6 +3,7 @@ import csv
 import urllib3
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from urllib.request import urlretrieve
 
 
 def scraping_category(url_category):
@@ -33,48 +34,67 @@ def get_all_categories(url):
 
 
 
-def get_all_urls_book_from_one_category(url_travel):
-  link_urls = []
-  response = requests.get(url_travel)
-  if response.ok:
-    soup = BeautifulSoup(response.content, "html.parser")
-    all_urls_book = soup.select("h3 a")
-    links = soup.find_all("a")
-    for link in links:
-        link_urls.append(urljoin(url_travel, link["href"]))
-    print(link_urls)
-  return link_urls[1:]
+def get_all_urls_book_from_one_category(url):
+    link_urls = []
+    response = requests.get(url)
+    if response.ok:
+        soup = BeautifulSoup(response.content, "html.parser")
+        all_urls_book = soup.select("h3 a")
+        for link in all_urls_book:
+            link_urls.append(urljoin(url, link["href"]))
+    # Y a-t-il une page suivante ?
+    next_button = soup.select_one('.next a')
+    if next_button is not None:
+        # Oui, il y a un bouton next -> on répète la même fonction sur la page
+        link_urls += get_all_urls_book_from_one_category(
+            urljoin(url, next_button['href'])
+        )
+    return link_urls
 
 
 
 
 def get_all_url_book_in_categories(url_all_book_category):
-  link_urls = []
-  response = requests.get(url_all_book_category)
-  if response.ok:
-    soup = BeautifulSoup(response.content, "html.parser")
-    all_urls_book = soup.select("h3 a")
-    links = soup.find_all("a")
-    for link in links:
-        link_urls.append(urljoin(url_all_book_category, link["href"]))
-        # pagination soit for(itérative) - soit récursive
-    print(link_urls)
-  return link_urls[1:]
+    link_urls = []
+    response = requests.get(url_all_book_category)
+    if response.ok:
+        soup = BeautifulSoup(response.content, "html.parser")
+        menu = soup.find(class_="side_categories")
+        links = menu.find_all("a")
+        for link in links:
+            link_urls.append(urljoin(url_all_book_category, link["href"]))
+        for link in link_urls:
+            book_urls = get_all_urls_book_from_one_category(link)
+            book_info_list = []
+            for url_all_book_category in book_urls:
+              book_info = scraping_book(url_all_book_category)
+              book_info_list.append(book_info)
+            save_book_info_to_csv(book_info_list)
+            
+            urlretrieve(url_all_book_category, filename="book_image.jpg")
+
+        print(link_urls)
+    return link_urls
 
 
 
 
 
 
-def save_book_info_to_csv(book_info: dict):
-    with open("book_info_to.csv", "w", encoding="utf-8-sig"
-    ) as csvfile:
-      writer = csv.DictWriter(csvfile, book_info, dialect="excel")
-      writer.writeheader()
-      writer.writerow(book_info)
+def save_book_info_to_csv(book_info_list: list):
+    """Penser à ajouter la docstring ici."""
+    first_book_info = book_info_list[0]
+    category = first_book_info["category"]
+    with open(f"{category}.csv", "w", encoding="utf-8-sig") as csvfile:
+        writer = csv.DictWriter(csvfile, first_book_info, dialect="excel")
+        writer.writeheader()
+        for book_info in book_info_list:
+          writer.writerow(book_info)
 
-def scraping_book():
-    url_book = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+
+
+
+def scraping_book(url_book):
     response = requests.get(url_book)  
     if response.ok:
         soup = BeautifulSoup(response.content, "html.parser")
