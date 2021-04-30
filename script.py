@@ -70,9 +70,7 @@ def get_all_url_book_in_categories(url_all_book_category):
               book_info = scraping_book(url_all_book_category)
               book_info_list.append(book_info)
             save_book_info_to_csv(book_info_list)
-            
-            urlretrieve(url_all_book_category, filename="book_image.jpg")
-
+            urlretrieve(url_all_book_category, filename="images.jpg")
         print(link_urls)
     return link_urls
 
@@ -85,7 +83,7 @@ def save_book_info_to_csv(book_info_list: list):
     """Penser à ajouter la docstring ici."""
     first_book_info = book_info_list[0]
     category = first_book_info["category"]
-    with open(f"{category}.csv", "w", encoding="utf-8-sig") as csvfile:
+    with open(f"{first_book_info}.csv", "a", encoding="utf-8-sig") as csvfile:
         writer = csv.DictWriter(csvfile, first_book_info, dialect="excel")
         writer.writeheader()
         for book_info in book_info_list:
@@ -131,14 +129,14 @@ def product_category(soup):
   return category
 
 def universal_product_code(soup):
-  upc = soup.find_all('td')[-0]
-  table = soup.find('table')
-  table_rows = table.find_all('tr')
+  upc = soup.find_all("td")[-0]
+  table = soup.find("table")
+  table_rows = table.find_all("tr")
   print(upc)
   return upc
 
 def product_image_url(soup):
-  image_url = soup.find('img')['src']
+  image_url = soup.find("img")["src"]
   print(image_url)
   return image_url
 
