@@ -43,11 +43,11 @@ def get_all_urls_book_from_one_category(url):
         for link in all_urls_book:
             link_urls.append(urljoin(url, link["href"]))
     # Y a-t-il une page suivante ?
-    next_button = soup.select_one('.next a')
+    next_button = soup.select_one(".next a")
     if next_button is not None:
         # Oui, il y a un bouton next -> on répète la même fonction sur la page
         link_urls += get_all_urls_book_from_one_category(
-            urljoin(url, next_button['href'])
+            urljoin(url, next_button["href"])
         )
     return link_urls
 
