@@ -119,36 +119,36 @@ def scraping_book(url_book):
           }   
      
 def product_description(soup):
-  description = soup.select_one(".sub-header ~ p")
+  description = soup.select_one(".sub-header ~ p").text
   print(description)
   return description
 
 def product_category(soup):
-  category = soup.select(".breadcrumb li")[-2]
+  category = soup.select(".breadcrumb li")[-2].text
   print(category)
   return category
 
 def universal_product_code(soup):
-  upc = soup.find_all("td")[-0]
+  upc = soup.find_all("td")[-0].text
   table = soup.find("table")
   table_rows = table.find_all("tr")
   print(upc)
   return upc
 
 def product_image_url(soup):
-  image_url = soup.find("img")["src"]
+  image_url = soup.find("img")["src"].text
   print(image_url)
   return image_url
 
 def product_number_available(soup):
-  number = soup.find_all("td")[5]
+  number = soup.find_all("td")[5].text
   table = soup.find("table")
   table_rows = table.find_all("tr")
   print(number)
   return number
 
 def product_price_including(soup):
-  including = soup.find_all("td")[3]
+  including = soup.find_all("td")[3].text
   table = soup.find("table")
   table_rows = table.find_all("tr")
   print(including)
@@ -162,6 +162,6 @@ def product_price_excluding(soup):
   return excluding
 
 def product_review_rating(soup):
-  review_rating = soup.find("p", "star-rating")["class"][1]
+  review_rating = soup.find("p", "star-rating")["class"][1].text
   print(review_rating)
   return review_rating
