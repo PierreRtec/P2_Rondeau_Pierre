@@ -1,7 +1,7 @@
 import requests
 import csv
 import urllib3
-import python-slugify
+from slugify import slugify
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from urllib.request import urlretrieve
@@ -96,13 +96,13 @@ def scraping_book(url_book):
         description = product_description(soup)
         category = product_category(soup)
         upc = universal_product_code(soup)
-        image_url = product_image_url(url_book, product_image_url(soup))
+        image_url = url_book, product_image_url(soup)
+        urlretrieve(book_info["image_name"]) 
         number = product_number_available(soup)
         including = product_price_including(soup)
         excluding = product_price_excluding(soup)
         review_rating = product_review_rating(soup)
         image_name = f"Images/{slugify(title)}.{image_url[-4:]}"
-        urlretrieve(book_info['image_name'])     
         return {
           "title": title,
           "description": description,
@@ -114,7 +114,7 @@ def scraping_book(url_book):
           "excluding": excluding,
           "review_rating": review_rating,
           }
-        
+
 
 def product_description(soup):    
     description_element = soup.select_one(".sub-header ~ p")
