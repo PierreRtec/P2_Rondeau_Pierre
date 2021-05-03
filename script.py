@@ -85,6 +85,8 @@ def save_book_info_to_csv(book_info_list: list):
         writer.writeheader()
         for book_info in book_info_list:
           writer.writerow(book_info)
+          urlretrieve(book_info["image_url"], filename=book_info["image_name"]) 
+
 
 
 def scraping_book(url_book):
@@ -97,7 +99,6 @@ def scraping_book(url_book):
         category = product_category(soup)
         upc = universal_product_code(soup)
         image_url = url_book, product_image_url(soup)
-        urlretrieve(book_info["image_name"]) 
         number = product_number_available(soup)
         including = product_price_including(soup)
         excluding = product_price_excluding(soup)
@@ -113,6 +114,7 @@ def scraping_book(url_book):
           "including": including,
           "excluding": excluding,
           "review_rating": review_rating,
+          "image_name": image_name
           }
 
 
