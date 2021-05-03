@@ -1,6 +1,7 @@
 import requests
 import csv
 import urllib3
+import python-slugify
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from urllib.request import urlretrieve
@@ -53,7 +54,6 @@ def get_all_urls_book_from_one_category(url):
 
 
 
-
 def get_all_url_book_in_categories(url_all_book_category):
     link_urls = []
     response = requests.get(url_all_book_category)
@@ -70,7 +70,6 @@ def get_all_url_book_in_categories(url_all_book_category):
               book_info = scraping_book(url_all_book_category)
               book_info_list.append(book_info)
             save_book_info_to_csv(book_info_list)
-            urlretrieve(url_all_book_category, filename="images")
     return link_urls
 
 
@@ -81,13 +80,11 @@ def get_all_url_book_in_categories(url_all_book_category):
 def save_book_info_to_csv(book_info_list: list):
     first_book_info = book_info_list[0]
     category = first_book_info["category"].strip()
-    with open(f"{category}.csv", "w", encoding="utf-8-sig") as csvfile:
+    with open(f"Scraping/{category}.csv", "w", encoding="utf-8-sig") as csvfile:
         writer = csv.DictWriter(csvfile, first_book_info, dialect="excel")
         writer.writeheader()
         for book_info in book_info_list:
           writer.writerow(book_info)
-
-
 
 
 def scraping_book(url_book):
@@ -99,11 +96,13 @@ def scraping_book(url_book):
         description = product_description(soup)
         category = product_category(soup)
         upc = universal_product_code(soup)
-        image_url = product_image_url(soup)
+        image_url = product_image_url(url_book, product_image_url(soup))
         number = product_number_available(soup)
         including = product_price_including(soup)
         excluding = product_price_excluding(soup)
         review_rating = product_review_rating(soup)
+        image_name = f"Images/{slugify(title)}.{image_url[-4:]}"
+        urlretrieve(book_info['image_name'])     
         return {
           "title": title,
           "description": description,
@@ -114,8 +113,9 @@ def scraping_book(url_book):
           "including": including,
           "excluding": excluding,
           "review_rating": review_rating,
-          }   
-     
+          }
+        
+
 def product_description(soup):    
     description_element = soup.select_one(".sub-header ~ p")
     if description_element is not None:
