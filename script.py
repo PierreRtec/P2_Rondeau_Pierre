@@ -70,8 +70,7 @@ def get_all_url_book_in_categories(url_all_book_category):
               book_info = scraping_book(url_all_book_category)
               book_info_list.append(book_info)
             save_book_info_to_csv(book_info_list)
-            urlretrieve(url_all_book_category, filename="images.jpg")
-        print(link_urls)
+            urlretrieve(url_all_book_category, filename="images")
     return link_urls
 
 
@@ -80,10 +79,9 @@ def get_all_url_book_in_categories(url_all_book_category):
 
 
 def save_book_info_to_csv(book_info_list: list):
-    """Penser à ajouter la docstring ici."""
     first_book_info = book_info_list[0]
-    category = first_book_info["category"]
-    with open(f"{first_book_info}.csv", "a", encoding="utf-8-sig") as csvfile:
+    category = first_book_info["category"].strip()
+    with open(f"{category}.csv", "w", encoding="utf-8-sig") as csvfile:
         writer = csv.DictWriter(csvfile, first_book_info, dialect="excel")
         writer.writeheader()
         for book_info in book_info_list:
@@ -118,10 +116,13 @@ def scraping_book(url_book):
           "review_rating": review_rating,
           }   
      
-def product_description(soup):
-  description = soup.select_one(".sub-header ~ p").text
-  print(description)
-  return description
+def product_description(soup):    
+    description_element = soup.select_one(".sub-header ~ p")
+    if description_element is not None:
+      description = description_element.text
+    else:
+      description = ""
+    return description
 
 def product_category(soup):
   category = soup.select(".breadcrumb li")[-2].text
@@ -136,7 +137,7 @@ def universal_product_code(soup):
   return upc
 
 def product_image_url(soup):
-  image_url = soup.find("img")["src"].text
+  image_url = soup.find("img")["src"]
   print(image_url)
   return image_url
 
@@ -155,13 +156,13 @@ def product_price_including(soup):
   return including
   
 def product_price_excluding(soup):
-  excluding = soup.find_all("td")[2]
+  excluding = soup.find_all("td")[2].text
   table = soup.find("table")
   table_rows = table.find_all("tr")
   print(excluding)
   return excluding
 
 def product_review_rating(soup):
-  review_rating = soup.find("p", "star-rating")["class"][1].text
+  review_rating = soup.find("p", "star-rating")["class"][1]
   print(review_rating)
   return review_rating
