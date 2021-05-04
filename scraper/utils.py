@@ -66,7 +66,7 @@ def get_all_url_book_in_categories(url_all_book_category):
     if response.ok:
         soup = BeautifulSoup(response.content, "html.parser")
         menu = soup.find(class_="side_categories")
-        links = menu.find_all("a")
+        links = menu.find_all("a")[1:]
         # Ici on vient ajouter une boucle qui va chercher tous les liens de tous les livres dans chacunes des catégories.
         for link in links:
             link_urls.append(urljoin(url_all_book_category, link["href"]))
@@ -104,7 +104,7 @@ def scraping_book(url_book):
     response = requests.get(url_book)  
     if response.ok:
         soup = BeautifulSoup(response.content, "html.parser")
-        title = soup.select_one(".product_main h1").text
+        title = soup.select_one(".product_main h1").text.strip()
         print(title)
         description = product_description(soup)
         category = product_category(soup)
@@ -140,7 +140,7 @@ def product_description(soup):
 def product_category(soup):
   category = soup.select(".breadcrumb li")[-2].text
   #print(category)
-  return category
+  return category.strip()
 
 def universal_product_code(soup):
   """Décrire toutes mes fonctions en expliquant sa fonction."""
