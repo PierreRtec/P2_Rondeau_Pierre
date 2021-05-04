@@ -115,7 +115,7 @@ def scraping_book(url_book):
         including = product_price_including(soup)
         excluding = product_price_excluding(soup)
         review_rating = product_review_rating(soup)
-        image_name = f"Images/{slugify(title[:100])}.{image_url[-3:]}"
+        image_name = f"Images/{slugify(title[:100])}.jpg"
         return {
           "title": title,
           "description": description,
