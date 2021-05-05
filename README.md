@@ -1,4 +1,4 @@
-# Application Scraping Book
+# Application Scraping Book -- SCRAPER --
 
 Bienvenue dans le guide d'utilisation "README.md" de l'application de web scraping, que j'ai nommée : "scraper".
 Vous trouverez toutes les informations nécessaires à l'utilisation de celle-ci.
